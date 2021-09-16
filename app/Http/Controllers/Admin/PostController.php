@@ -104,11 +104,11 @@ class PostController extends Controller
         ]);
         $data = $request->all();
         $post->update($data);
+        if(array_key_exists('tags',$data)){
+            $post->tags()->sync($data['tags']);
+        }
         return redirect()->route('admin.posts.index')->with('updated', 'Hai modificato il post numero ' . $post->id);
 
-        if(array_key_exists('tags',$data)){
-            $newPost->tags()->sync($data['tags']);
-        }
     }
 
     /**
