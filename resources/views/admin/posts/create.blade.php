@@ -31,10 +31,20 @@
       @endforeach
   </select>
   </div>
-  <div class="form-floating">
-    <label for="descrizione" class="form-label">Descrizione</label>
-    <textarea class="form-control" name="content" id="descrizione" style="height: 100px"></textarea>
-</div>
+    <div class="form-floating">
+        <label for="descrizione" class="form-label">Descrizione</label>
+        <textarea class="form-control" name="content" id="descrizione" style="height: 100px"></textarea>
+    </div>
+    <div>
+        <h5 class="mt-2">Tag</h5>
+        @foreach($tags as $tag)
+            <input id="tag{{$loop->iteration}}" type="checkbox" name="tags[]"class="ml-2" value="{{$tag->id}}"
+            @if(in_array($tag->id, old('tags', []))) checked @endif>
+            <label for="tag{{$loop->iteration}}">{{ $tag->name }}</label>
+        @endforeach
+    </div>
+
+
   <button type="submit" class="btn btn-primary mt-5">Submit</button>
 </form>
 @endsection

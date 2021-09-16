@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Post;
 use App\Category;
+use App\Tag;
 
 class PostController extends Controller
 {
@@ -30,7 +31,9 @@ class PostController extends Controller
     public function create()
     {
         $categories = Category::all();
-        return view('admin.posts.create',compact('categories'));
+        $tags = Tag::all();
+
+        return view('admin.posts.create',compact('categories','tags'));
     }
 
     /**
@@ -51,6 +54,10 @@ class PostController extends Controller
         $newPost->fill($data);
 
         $newPost->save();
+        
+        if(array_key_exists('tags',$data)){
+            $newPost->tags()->attach($data['tags']);
+        }
 
         return redirect()->route('admin.posts.index');
 
@@ -78,7 +85,8 @@ class PostController extends Controller
     public function edit(Post $post)
     {   
         $categories = Category::all();
-        return view('admin.posts.edit', compact('post', 'categories'));
+        $tags = Tag::all();
+        return view('admin.posts.edit', compact('post', 'categories','tags'));
     }
 
     /**
@@ -97,6 +105,10 @@ class PostController extends Controller
         $data = $request->all();
         $post->update($data);
         return redirect()->route('admin.posts.index')->with('updated', 'Hai modificato il post numero ' . $post->id);
+
+        if(array_key_exists('tags',$data)){
+            $newPost->tags()->sync($data['tags']);
+        }
     }
 
     /**
@@ -108,6 +120,7 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         $post->delete(); 
+        $post->tags()->detach();
         return redirect()->route('admin.posts.index')->with('deleted', 'Hai eliminato il post numero ' . $post->id);
     }
 }

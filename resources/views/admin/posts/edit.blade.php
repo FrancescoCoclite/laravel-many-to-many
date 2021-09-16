@@ -33,10 +33,27 @@
                     @endforeach
                 </select>
             </div>
-
+            
+            
+            
             <div class="mb-3">
                 <label for="desc" class="form-label">Descrizione</label>
                 <textarea class="form-control" name="content" id="desc" cols="30" rows="10">{{ $post->content}}</textarea>
+            </div>
+            
+            <div>
+                <h5 class="mt-2">Tag</h5>
+                @foreach($tags as $tag)
+                <input id="tag{{$loop->iteration}}" type="checkbox" name="tags[]"class="ml-2" value="{{$tag->id}}"
+                
+                @if($post->tags->contains( $tag->id )) 
+                checked 
+                @elseif(in_array($tag->id, old('tags', [])))
+                checked 
+                @endif
+                >
+                <label for="tag{{$loop->iteration}}">{{ $tag->name }}</label>
+                @endforeach
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
